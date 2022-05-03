@@ -1,3 +1,11 @@
+# Kyle Kentner
+# Dr. Doug Heisterkamp
+# CS-5723: Artificial Intelligence
+# 2 May 2022
+# Image Sharpening via Reinforcement Learning
+#######################################################################################
+# This file contains the attempt at a CSP-based solution
+#######################################################################################
 import Kentner_PA2 as kpa
 import Kentner_Project_Util as kpu
 import sys, getopt
