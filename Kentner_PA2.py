@@ -1,7 +1,13 @@
-# UTILITY FILE: Contains the class definition for the node objects and the CSP/backtracking functions
-# Author: Kyle Kentner
-# Instructor: Dr. Doug Heisterkamp
-# Modification of PA2 (Constraint Satisfaction and Backtracking)
+# Kyle Kentner
+# Dr. Doug Heisterkamp
+# CS-5723: Artificial Intelligence
+# 2 May 2022
+# Image Sharpening via Reinforcement Learning
+#######################################################################################
+# This file contains the class definition for the node objects and the CSP/backtracking
+# functions. It is a modification of PA2 (Constraint Satisfaction and Backtracking)
+#######################################################################################
+
 
 #######################
 # NODE CLASS DEFINITION

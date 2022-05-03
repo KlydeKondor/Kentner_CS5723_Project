@@ -1,3 +1,14 @@
+# Kyle Kentner
+# Dr. Doug Heisterkamp
+# CS-5723: Artificial Intelligence
+# 2 May 2022
+# Image Sharpening via Reinforcement Learning
+##################################################################################
+# This file contains utility functions--chiefly, the FFT and MSE functions.
+# Peak signal-to-noise ratio was also made into a function, but not implemented.
+# FFT_Test is used for debugging.
+##################################################################################
+
 import Kentner_PA2 as kpa
 import sys, getopt
 import os
@@ -81,6 +92,9 @@ def FFT(file_name, hpf, sharp_name):
     img_compare = np.abs(img_compare)
     #cv2.imwrite('img_compare.jpg', img_compare)
     
+    # Get the average intensity for the color image
+    avg_intensity = 0
+    
     # Iterate over each pixel; get the RGB values, and scale based on the processed grayscale image to emphasize edges
     for y in range(rows):
         for x in range(cols):
@@ -88,6 +102,9 @@ def FFT(file_name, hpf, sharp_name):
             cur_node = kpa.Node()
             cur_node.location = [y, x]
             cur_node.rgb = img_color[y, x]
+            
+            # Accumulate the average RGB in avg_rgb
+            avg_intensity += int(int(cur_node.rgb[0]) + int(cur_node.rgb[1]) + int(cur_node.rgb[2])) / 3
             
             # Determine how much the current pixel was boosted versus the original image
             if img_original[y, x] != 0:
@@ -99,14 +116,18 @@ def FFT(file_name, hpf, sharp_name):
             cur_node.rgb[0] = int(cur_node.rgb[0] * coeff) if cur_node.rgb[0] * coeff < 255 else 255
             cur_node.rgb[1] = int(cur_node.rgb[1] * coeff) if cur_node.rgb[1] * coeff < 255 else 255
             cur_node.rgb[2] = int(cur_node.rgb[2] * coeff) if cur_node.rgb[2] * coeff < 255 else 255
-            
+    
+    # Normalize the average intensity
+    avg_intensity /= rows * cols
+    print(avg_intensity)
+    
     # Compare the error between the final image and the original (unpaired) or target (paired) image
     if img_sharp is None:
         # Return the mean-squared error between the original and filtered grayscale images, along with the final color image
-        return MSE(img_compare, img_back), None, img_color
+        return MSE(img_compare, img_back), None, img_color, avg_intensity
     else:
         # Return the mean-squared error between the filtered and sharp grayscale images, along with the final color image
-        return MSE(img_compare, img_back), MSE(img_sharp, img_back), img_color
+        return MSE(img_compare, img_back), MSE(img_sharp, img_back), img_color, avg_intensity
     
     
 # Calculate the peak signal-to-noise ratio (PSNR) between input and output images

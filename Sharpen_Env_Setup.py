@@ -1,3 +1,12 @@
+# Kyle Kentner
+# Dr. Doug Heisterkamp
+# CS-5723: Artificial Intelligence
+# 2 May 2022
+# Image Sharpening via Reinforcement Learning
+##################################################################################
+# This file contains the setup and functions used by the RL model/agent.
+##################################################################################
+
 import Kentner_PA2 as kpa
 import Kentner_Project_Util as kpu
 import sys, getopt
@@ -61,6 +70,9 @@ class SharpenEnv(Env):
         
         # Optimized MSE sharp (training rewards will be based on improvements)
         self.mse_opt = 1000000000
+        
+        # Average image intensity (returned by FFT)
+        self.intensity = 0
     
     # The step function performs the FFT with a new HPF cutoff each time
     def step(self, action):
@@ -68,7 +80,7 @@ class SharpenEnv(Env):
         done = False
         
         # Get the mean-squared error between the output image and the blurry/sharp images, as well as the image itself
-        mse_original, mse_sharp, img_out = kpu.FFT(self.file_name, self.state, self.file_sharp)
+        mse_original, mse_sharp, img_out, self.intensity = kpu.FFT(self.file_name, self.state, self.file_sharp)
         print(' ')
         print(' ', self.state, mse_original, mse_sharp)
         
@@ -119,7 +131,7 @@ class SharpenEnv(Env):
                 
             self.img_processed = img_out
         
-        elif mse_original > 0.001369 * self.rows * self.columns:
+        elif mse_original > self.intensity * 12:
             # Penalize a test iteration's result for being too different from the original (blurry) image
             reward = -1
             
